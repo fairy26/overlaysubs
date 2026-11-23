@@ -2,5 +2,7 @@ target/
 src-tauri/gen/
 src-tauri/libs/
 dist/
+bin/
+helper/.build/
 .DS_Store
 *.log
