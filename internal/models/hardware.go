@@ -45,13 +45,14 @@ func DetectHardware() Hardware {
 }
 
 // SelectDefaults picks default ASR and translator models for Apple Silicon memory size.
-// - 8 GB Macs (< 16 GiB - 512 MiB): PLaMo 3 Translate 2B Q4_K_M + Parakeet
-// - 16 GB+ Macs (>= 16 GiB - 512 MiB): PLaMo 3 Translate 8B Q4_K_M + Whisper (provisional until benchmark decides)
+// - 8 GB Macs (< 16 GiB - 512 MiB): PLaMo 3 Translate 2B Q4_K_M + Parakeet TDT v3 (ANE)
+// - 16 GB+ Macs (>= 16 GiB - 512 MiB): PLaMo 3 Translate 8B Q4_K_M + Parakeet TDT v3 (ANE)
+//   (selected by M2 benchmark in docs/asr-benchmark.md; whisper remains selectable via config/UI/CLI)
 func SelectDefaults(memBytes uint64) Defaults {
 	const threshold16GiB = 16*gib - 512*mib
 	if memBytes >= threshold16GiB {
 		return Defaults{
-			ASREngine:    ASRWhisper,
+			ASREngine:    ASRParakeet,
 			TranslatorID: ModelPlamo8BQ4KM,
 		}
 	}

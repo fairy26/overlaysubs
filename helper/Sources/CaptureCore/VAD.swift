@@ -133,11 +133,13 @@ public struct UtteranceSegment: Sendable, Equatable {
     public let samples: [Float]
     public let startMs: Int
     public let endMs: Int
+    public let vadDelayMs: Int
 
-    public init(samples: [Float], startMs: Int, endMs: Int) {
+    public init(samples: [Float], startMs: Int, endMs: Int, vadDelayMs: Int = 0) {
         self.samples = samples
         self.startMs = startMs
         self.endMs = endMs
+        self.vadDelayMs = vadDelayMs
     }
 }
 
@@ -199,7 +201,8 @@ public final class Endpointer {
                 let trimmed = Array(buf.prefix(keep))
                 let segStartMs = samplesToMs(startSample)
                 let segEndMs = samplesToMs(startSample + trimmed.count)
-                out.append(UtteranceSegment(samples: trimmed, startMs: segStartMs, endMs: segEndMs))
+                let delayMs = max(0, samplesToMs(pos) - segEndMs)
+                out.append(UtteranceSegment(samples: trimmed, startMs: segStartMs, endMs: segEndMs, vadDelayMs: delayMs))
                 buf.removeAll(keepingCapacity: true)
                 silent = 0
             }

@@ -1,14 +1,18 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 import PackageDescription
 
 let package = Package(
     name: "CaptureHelper",
     platforms: [
-        .macOS(.v13),
+        .macOS(.v14),
     ],
     products: [
         .library(name: "CaptureCore", targets: ["CaptureCore"]),
         .executable(name: "capture-helper", targets: ["CaptureHelper"]),
+    ],
+    dependencies: [
+        // Opt out of TTS, Diarizer, and NemoTextProcessing binary to keep ASR-only footprint minimal.
+        .package(url: "https://github.com/FluidInference/FluidAudio.git", from: "0.18.4", traits: []),
     ],
     targets: [
         .systemLibrary(
@@ -21,7 +25,10 @@ let package = Package(
         ),
         .target(
             name: "CaptureCore",
-            dependencies: ["CWhisper"],
+            dependencies: [
+                "CWhisper",
+                .product(name: "FluidAudio", package: "FluidAudio"),
+            ],
             path: "Sources/CaptureCore",
             swiftSettings: [
                 .swiftLanguageMode(.v5),
@@ -32,6 +39,7 @@ let package = Package(
                 .linkedFramework("CoreMedia"),
                 .linkedFramework("CoreAudio"),
                 .linkedFramework("AVFoundation"),
+                .linkedFramework("CoreML"),
                 .unsafeFlags(["-L/opt/homebrew/lib", "-Xlinker", "-rpath", "-Xlinker", "/opt/homebrew/lib"]),
             ]
         ),

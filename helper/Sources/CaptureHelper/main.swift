@@ -2,7 +2,7 @@ import CaptureCore
 import Foundation
 
 struct CLIOptions {
-    var asrEngine: String = "whisper"
+    var asrEngine: String = "parakeet"
     var whisperURL: String = "http://127.0.0.1:18100"
     var vadModelPath: String = ""
     var appBundleId: String = ""
@@ -59,7 +59,7 @@ struct CLIOptions {
             case "-h", "--help":
                 let usage = """
                 usage: capture-helper [options]
-                  --asr <whisper|parakeet>    ASR engine (default: whisper)
+                  --asr <parakeet|whisper>    ASR engine (default: parakeet)
                   --whisper-url <url>         whisper-server URL (default: http://127.0.0.1:18100)
                   --vad-model <path>          Silero VAD GGML model path (empty = RMS fallback)
                   --app <bundle-id>           Target macOS app bundle ID (empty = system audio)
@@ -114,6 +114,7 @@ actor UtteranceProcessor {
                 text: trimmed,
                 startMs: segment.startMs,
                 endMs: segment.endMs,
+                vadDelayMs: segment.vadDelayMs,
                 asrMs: res.elapsedMs,
                 engine: engine.engineName
             ))
@@ -173,6 +174,12 @@ struct CaptureHelperMain {
             if !opts.inputWavPath.isEmpty {
                 let pcm = try readWAVAs16kMono(path: opts.inputWavPath)
                 logStderr("loaded WAV \(opts.inputWavPath): \(pcm.count) samples (\(String(format: "%.2f", Double(pcm.count) / Double(kTargetSampleRate)))s)")
+                if !opts.saveWavPath.isEmpty {
+                    let saver = try StreamingWAVWriter(path: opts.saveWavPath)
+                    saver.append(samples: pcm)
+                    saver.close()
+                    logStderr("saved 16kHz mono WAV to \(opts.saveWavPath)")
+                }
                 writer.write(ReadyEvent(engine: engine.engineName))
 
                 let chunkSize = 160 // 10 ms chunks, matching live capture cadence

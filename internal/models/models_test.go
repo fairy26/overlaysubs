@@ -39,12 +39,12 @@ func TestSelectDefaultsByMemory(t *testing.T) {
 	}
 
 	d16 := SelectDefaults(16 * gib)
-	if d16.TranslatorID != ModelPlamo8BQ4KM || d16.ASREngine != ASRWhisper {
+	if d16.TranslatorID != ModelPlamo8BQ4KM || d16.ASREngine != ASRParakeet {
 		t.Fatalf("16GB defaults mismatch: %+v", d16)
 	}
 
 	d32 := SelectDefaults(32 * gib)
-	if d32.TranslatorID != ModelPlamo8BQ4KM || d32.ASREngine != ASRWhisper {
+	if d32.TranslatorID != ModelPlamo8BQ4KM || d32.ASREngine != ASRParakeet {
 		t.Fatalf("32GB defaults mismatch: %+v", d32)
 	}
 }

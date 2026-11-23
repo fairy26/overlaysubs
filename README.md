@@ -13,7 +13,7 @@ Tauri や webview を使わず、Pure Go（`CGO_ENABLED=0`）の [MyGo](https://
   ScreenCaptureKit で Chrome 等の対象アプリ音声を取得（または --input-wav）
     → 16 kHz モノラル Float32（--save-wav で保存可）
     → Silero VAD (ggml-silero-v6.2.0.bin) で発話ごとに区切る
-    → ASREngine（whisper: whisper-server HTTP / parakeet: 差し替え枠）
+    → ASREngine（parakeet: FluidAudio / Core ML / ANE [既定] / whisper: whisper-server HTTP [Metal]）
     → stdout に JSON Lines 出力（ログは stderr）
         ↓
 [Go 本体 cmd/overlaysubs (MyGo ネイティブ UI、CGO_ENABLED=0)]
@@ -25,7 +25,7 @@ Tauri や webview を使わず、Pure Go（`CGO_ENABLED=0`）の [MyGo](https://
 
 ## 必要環境
 
-- macOS 13 以降（Apple Silicon）
+- macOS 14 以降（Apple Silicon）
 - Go 1.27 以降
 - Xcode Command Line Tools（Swift 6）
 - Homebrew でインストールする推論サーバ・VAD ライブラリ

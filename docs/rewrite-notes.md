@@ -109,7 +109,7 @@ Homebrew の `whisper.cpp` v1.9.5_2 ボトル（`/opt/homebrew/bin/whisper-serve
 | Apple Silicon 統合メモリ | 既定の翻訳モデル | 既定の ASR エンジン |
 | --- | --- | --- |
 | 8 GB クラス（`16 GiB - 512 MiB` 未満） | `plamo-3-translate-2b-q4_k_m`（PLaMo 3 Translate 2B Q4_K_M） | `parakeet` |
-| 16 GB 以上（`16 GiB - 512 MiB` 以上） | `plamo-3-translate-8b-q4_k_m`（PLaMo 3 Translate 8B Q4_K_M） | 暫定 `whisper`（ベンチマーク結果で最終決定、設定・CLI で切替可能） |
+| 16 GB 以上（`16 GiB - 512 MiB` 以上） | `plamo-3-translate-8b-q4_k_m`（PLaMo 3 Translate 8B Q4_K_M） | `parakeet`（M2 実機比較で決定。詳細は `docs/asr-benchmark.md`、`whisper` へ切替可能） |
 
 翻訳モデル（8B / 2B）および ASR エンジン（`whisper` / `parakeet`）はいずれも設定ファイル・UI・CLI フラグから手動で切り替えられる。
 
@@ -125,8 +125,8 @@ Go 側は `CGO_ENABLED=0` の Pure Go（MyGo）を維持し、ネイティブ音
   Silero VAD (libwhisper + ggml-silero-v6.2.0.bin、発話単位に分割)
     ↓ 発話 Float32 PCM
   ASREngine プロトコル
-    - whisper  : ローカル whisper-server HTTP API (/inference) を呼び出す
-    - parakeet : Parakeet TDT v3 (FluidAudio / Core ML、後続フェーズで組み込み)
+    - parakeet : Parakeet TDT v3 (FluidAudio / Core ML / Apple Neural Engine、既定)
+    - whisper  : ローカル whisper-server HTTP API (/inference、Metal GPU) を呼び出す
     ↓ stdout: JSON Lines（ログは stderr）
 
 [Go 本体 (MyGo ネイティブ UI、CGO_ENABLED=0)]
@@ -169,7 +169,7 @@ Go 側は `CGO_ENABLED=0` の Pure Go（MyGo）を維持し、ネイティブ音
 
 | フラグ | 説明 |
 | --- | --- |
-| `--asr <whisper\|parakeet>` | 使用する ASR エンジンを選択する（既定 `whisper`） |
+| `--asr <parakeet\|whisper>` | 使用する ASR エンジンを選択する（既定 `parakeet`） |
 | `--whisper-url <url>` | `whisper` エンジン選択時の `whisper-server` ベース URL（例 `http://127.0.0.1:18100`） |
 | `--vad-model <path>` | `ggml-silero-v6.2.0.bin` のパス（未指定時はエネルギーベースフォールバック可） |
 | `--app <bundle-id>` | ScreenCaptureKit で対象にするアプリの Bundle ID（例 `com.google.Chrome`、空でシステム全体） |

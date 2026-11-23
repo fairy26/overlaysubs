@@ -51,7 +51,7 @@ public func makeASREngine(kind: String, whisperURL: URL?) throws -> any ASREngin
         }
         return WhisperServerASR(baseURL: url)
     case "parakeet":
-        return ParakeetStubASR()
+        return ParakeetASR()
     default:
         throw ASREngineError.unknownEngine(kind)
     }

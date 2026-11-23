@@ -16,6 +16,7 @@ public struct UtteranceEvent: Codable, Sendable, Equatable {
     public let text: String
     public let startMs: Int
     public let endMs: Int
+    public let vadDelayMs: Int
     public let asrMs: Int
     public let engine: String
 
@@ -25,16 +26,18 @@ public struct UtteranceEvent: Codable, Sendable, Equatable {
         case text
         case startMs = "start_ms"
         case endMs = "end_ms"
+        case vadDelayMs = "vad_delay_ms"
         case asrMs = "asr_ms"
         case engine
     }
 
-    public init(id: Int, text: String, startMs: Int, endMs: Int, asrMs: Int, engine: String) {
+    public init(id: Int, text: String, startMs: Int, endMs: Int, vadDelayMs: Int = 0, asrMs: Int, engine: String) {
         self.type = "utterance"
         self.id = id
         self.text = text
         self.startMs = startMs
         self.endMs = endMs
+        self.vadDelayMs = vadDelayMs
         self.asrMs = asrMs
         self.engine = engine
     }

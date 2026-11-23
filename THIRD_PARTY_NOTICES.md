@@ -20,8 +20,9 @@ apply to the distributed builds.
   directory next to `overlaysubs.exe`; macOS places it at
   `OverlaySubs.app/Contents/Resources/THIRD_PARTY_NOTICES.md`.
 - **Downloaded at runtime (not part of the installers).** On first run the app
-  downloads model files from Hugging Face: OpenAI Whisper GGML models (MIT),
-  Silero VAD (MIT) and PLaMo 3 Translate models. PLaMo is **not** open source;
+  downloads model files from Hugging Face: NVIDIA Parakeet TDT 0.6B v3 Core ML
+  models (CC-BY-4.0, converted by FluidInference), OpenAI Whisper GGML models
+  (MIT), Silero VAD (MIT) and PLaMo 3 Translate models. PLaMo is **not** open source;
   it is governed by the PLaMo Community License (revised November 9, 2026),
   provided by Preferred Networks, Inc. Personal and academic use are free;
   commercial use requires prior registration with PFN:
@@ -148,6 +149,19 @@ License text: Apache License 2.0, reproduced in
 [§4](#4-license-texts). The upstream `LICENSE.txt` notes that most of the
 project is Apache-2.0 and that a few files use more-permissive licenses.
 
+### 1.4 FluidAudio — Apache-2.0 (macOS helper)
+
+Version: FluidAudio 0.18.4 (Swift Package Manager dependency in `helper/Package.swift`, built with `traits: []` for ASR/VAD only, omitting `NemoTextProcessing`, `TTS`, and `Diarizer`)
+
+Upstream: <https://github.com/FluidInference/FluidAudio>
+
+License text: Apache License 2.0, reproduced in [§4.2](#42-apache-20-352-crates).
+
+FluidAudio internally compiles the `FastClusterWrapper` target (`fastcluster`), which is licensed under BSD-2-Clause (reproduced in [§4.12](#412-bsd-2-clause-1-crate)):
+
+- Until package version 1.1.23: Copyright (c) 2011 Daniel Müllner (<https://danifold.net>)
+- All changes from version 1.1.24 on: Copyright (c) Google Inc. (<https://www.google.com>)
+
 ## 2. Runtime-downloaded model assets
 
 These files are **not** included in the installers. OverlaySubs downloads them
@@ -170,10 +184,18 @@ document.
 | plamo-3-translate-8b-Q3_K_M.gguf | `pfnet/plamo-3-translate-8b-GGUF` | `2234f168757f570714b333049c9d018161ec5277` | PLaMo Community License, revised 2026-11-09 (not open source; see <https://plamo.preferredai.jp/info/plamo-community-license-en>) |
 | plamo-3-translate-2b-Q4_K_M.gguf | `pfnet/plamo-3-translate-2b-GGUF` | `232fbd7916519edecddfdae0beae7e76fe70453f` | PLaMo Community License, revised 2026-11-09 (not open source; see <https://plamo.preferredai.jp/info/plamo-community-license-en>) |
 | plamo-3-translate-0.8b-Q4_K_M.gguf | `pfnet/plamo-3-translate-0.8b-GGUF` | `dbeb0856cb0b004b484f190bb71dd65876297013` | PLaMo Community License, revised 2026-11-09 (not open source; see <https://plamo.preferredai.jp/info/plamo-community-license-en>) |
+| `parakeet-tdt-0.6b-v3-coreml` (`*.mlmodelc`, vocab) | `FluidInference/parakeet-tdt-0.6b-v3-coreml` (base: `nvidia/parakeet-tdt-0.6b-v3`) | `7dd20fe6b1797d35f5e3307e8b1732d9a178edfe` | CC-BY-4.0 (<https://creativecommons.org/licenses/by/4.0/legalcode.en>; NVIDIA Parakeet TDT 0.6B v3 weights converted to Core ML by FluidInference) |
 | ggml-silero-v6.2.0.bin | `ggml-org/whisper-vad` | `9ffd54a1e1ee413ddf265af9913beaf518d1639b` | MIT (Silero VAD) |
 
-Attribution for the MIT-licensed model weights and the VAD model:
+Attribution for the open-licensed model weights and the VAD model:
 
+- Parakeet TDT 0.6B v3 model weights: Copyright (c) NVIDIA Corporation,
+  licensed under the Creative Commons Attribution 4.0 International License
+  (CC-BY-4.0, <https://creativecommons.org/licenses/by/4.0/legalcode.en>).
+  Upstream model: <https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3>.
+  Modifications made: converted from NeMo/PyTorch weights into Core ML
+  (`.mlmodelc`) format by FluidInference at
+  <https://huggingface.co/FluidInference/parakeet-tdt-0.6b-v3-coreml>.
 - Whisper model weights: Copyright (c) 2022 OpenAI (MIT). The GGML
   conversions are published in the ggerganov/whisper.cpp repository.
 - Silero VAD: Copyright (c) 2020-present Silero Team (MIT). Upstream
